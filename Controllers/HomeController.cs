@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using MvcCore.Models;
@@ -14,10 +16,59 @@ namespace MvcCore.Controllers
     {
         MobileContext db;
 
-        public HomeController(MobileContext context)
+        // блок по загрузки файлов 
+        private readonly IWebHostEnvironment _appEnvironment;
+        //private readonly IDrink _drink;
+        // инхекция через ктор
+        public HomeController(MobileContext context, IWebHostEnvironment appEnvironment/*, IDrink drink*/)
         {
             db = context;
+            _appEnvironment = appEnvironment;
+            //_drink = drink;
         }
+        public IActionResult GetFile()
+        {
+            //_drink.Drink();
+            // Путь к файлу
+            string file_path = Path.Combine(_appEnvironment.ContentRootPath, "Files/sample.pdf");
+            // Тип файла - content-type
+            string file_type = "application/pdf";
+            // Имя файла - необязательно
+            string file_name = "sample.pdf";
+
+
+            //IDrink f = new Party();
+            //var gay = new Vanya(new Party());
+
+            //gay.bobo = new Party();
+            //gay.bobo.Drink();
+            
+            return PhysicalFile(file_path, file_type, file_name);
+        }
+        //class Vanya
+        //{
+        //    public IDrink bobo { get; set; }
+        //    public IDrink dodo { get; set; }
+        //    public Vanya(IDrink bobo)
+        //    {
+        //        this.bobo = bobo;
+        //    }
+
+        //}
+
+        //public interface IDrink
+        //{
+        //    void Drink();
+        //}
+
+        //class Party : IDrink
+        //{
+        //    public void Drink()
+        //    {
+        //        throw new NotImplementedException();
+        //    }
+        //}
+
 
         public IActionResult Index()
         {
